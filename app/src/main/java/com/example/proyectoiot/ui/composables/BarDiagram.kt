@@ -52,7 +52,7 @@ fun BarChart(
                     .width(40.dp),
                 primaryColor = primaryColor,
                 secondaryColor = if (isLastIndex) LightPink else Color.White,
-                percentage = percentage,
+                luminosity = input.DeviceData.luminosity,
                 description = getDayOfWeekFromDate(input.DeviceData.calendar),
                 showDescription = showDescription
             )
@@ -65,7 +65,7 @@ fun Bar(
     modifier: Modifier = Modifier,
     primaryColor: Color,
     secondaryColor: Color,
-    percentage: Float,
+    luminosity: Int,
     description: String,
     showDescription: Boolean
 ) {
@@ -151,13 +151,11 @@ fun Bar(
             }
 
             if (showDescription) {
-                val percentageValue = (percentage * 100).roundToInt()
-                val percentageText = "$percentageValue"
-                val percentageSign = "%"
+                val percentageText = " $luminosity"
 
                 val textPaint = android.graphics.Paint().apply {
                     color = Color.White.toArgb()
-                    textSize = 12.dp.toPx()
+                    textSize = 10.dp.toPx()
                     isFakeBoldText = true
                 }
 
@@ -177,7 +175,7 @@ fun Bar(
                     val signX = textX + textWidth
                     val signMetrics = signPaint.fontMetrics
                     val signY = textY
-                    drawText(percentageSign, signX, signY, signPaint)
+                    drawText("l", signX, signY, signPaint)
                 }
             }
         }
@@ -203,44 +201,7 @@ private fun getDayOfWeekFromDate(dateString: String): String {
     }
 }
 
-@Composable
-@Preview
-fun BarChartPreview() {
-    val exampleObjectData1 = ObjectData(
-        DeviceId = 1,
-        SampleTime = System.currentTimeMillis(),
-        DeviceData = ObjectData.deviceData(
-            calendar = "2023-08-02",
-            hour = "10:30",
-            luminosity = 50
-        )
-    )
 
-    val exampleObjectData2 = ObjectData(
-        DeviceId = 2,
-        SampleTime = System.currentTimeMillis(),
-        DeviceData = ObjectData.deviceData(
-            calendar = "2023-08-03",
-            hour = "12:45",
-            luminosity = 80
-        )
-    )
-
-    val exampleObjectData3 = ObjectData(
-        DeviceId = 3,
-        SampleTime = System.currentTimeMillis(),
-        DeviceData = ObjectData.deviceData(
-            calendar = "2023-08-04",
-            hour = "15:20",
-            luminosity = 30
-        )
-    )
-    val dummyData = listOf(
-        exampleObjectData1, exampleObjectData2, exampleObjectData3
-    )
-
-    BarChart(inputList = dummyData, modifier = Modifier, showDescription = true)
-}
 
 @Composable
 fun getColorByPercentage(percentage: Float): Color {

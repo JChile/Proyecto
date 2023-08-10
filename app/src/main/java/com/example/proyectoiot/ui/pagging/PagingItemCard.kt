@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyectoiot.R
@@ -30,20 +31,12 @@ import com.example.proyectoiot.ui.composables.ObjectData
 
 val FontMontserrat = FontFamily(Font(R.font.montserrat_wght))
 
-
-fun getLuminosity(lum: Int, third: Int): Int {
-    return when {
-        lum >= third * 2 -> 3
-        lum >= third -> 2
-        else -> 1
-    }
-}
-
 @Composable
-fun PagingItemCard(paggingobject: ObjectData) {
-    val maxValue = 255
+fun PagingItemCard(paggingobject: ObjectData, value: Boolean) {
+    val maxValue = 1024
     val third = maxValue / 3
     val lum = paggingobject.DeviceData.luminosity
+    val mov = paggingobject.DeviceData.detection
 
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -102,20 +95,39 @@ fun PagingItemCard(paggingobject: ObjectData) {
                 Row(
                     modifier = Modifier.padding(start = 12.dp)
                 ) {
-                    Text(
-                        text = "Luminosidad: ",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontMontserrat,
-                        color = Color.LightGray,
-                    )
-                    Text(
-                        text = "${paggingobject.DeviceData.luminosity} lum",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontMontserrat,
-                        color = Color.LightGray,
-                    )
+
+                    if(value) {
+                        Text(
+                            text = "Luminosidad: ",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontMontserrat,
+                            color = Color.LightGray,
+                        )
+                        Text(
+                            text = lum.toString() + " lum",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontMontserrat,
+                            color = Color.LightGray,
+                        )
+                    } else {
+                        Text(
+                            text = "Movimiento: ",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontMontserrat,
+                            color = Color.LightGray,
+                        )
+                        Text(
+                            text = if(mov) "Si" else "No",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontMontserrat,
+                            color = Color.LightGray,
+                        )
+                    }
+
                 }
 
             }
@@ -125,12 +137,22 @@ fun PagingItemCard(paggingobject: ObjectData) {
                     .padding(end = 5.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Icon(
-                    painter = painterResource(id = if(lum >= third * 2) R.drawable.ic_high else if (lum >= third) R.drawable.ic_medium  else R.drawable.ic_low ),
-                    modifier = Modifier.size(50.dp),
-                    contentDescription = "Turn Icon",
-                    tint = if(lum >= third * 2) Color.Red else if (lum >= third) Color.Yellow else Color.Green
+                if(value){
+                    Icon(
+                        painter = painterResource(id = if(lum >= third * 2) R.drawable.ic_high else if (lum >= third) R.drawable.ic_medium  else R.drawable.ic_low ),
+                        modifier = Modifier.size(50.dp),
+                        contentDescription = "Turn Icon",
+                        tint = if(lum >= third * 2) Color.Red else if (lum >= third) Color.Yellow else Color.Green
                     )
+                } else {
+                    Icon(
+                        painter = painterResource(id = if(mov) R.drawable.ic_light_on else R.drawable.ic_light_off ),
+                        modifier = Modifier.size(50.dp),
+                        contentDescription = "Turn Icon",
+                        tint = if(mov) Color.Green else Color.Red,
+                    )
+                }
+
             }
 
         }

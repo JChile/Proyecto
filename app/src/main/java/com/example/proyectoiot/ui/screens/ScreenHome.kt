@@ -79,7 +79,7 @@ fun ScreenHome(navController: NavController, viewModelGraphic: GraphicViewData) 
                 Spacer(modifier = Modifier.height(height = 10.dp))
                 BarChart(
                     graphicData.value!!,
-                    modifier = Modifier.fillMaxWidth().height(250.dp),
+                    modifier = Modifier.fillMaxWidth().height(300.dp),
                     showDescription = showDescription
                 )
 
